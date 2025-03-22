@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Разлом Времени</title>
+    <title>Кристалл Судьбы</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game">
-        <h1 id="title">Разлом Времени</h1>
-        <p id="story">Временной разлом открыт... Что вы будете делать?</p>
+        <h1 id="title">Кристалл Судьбы</h1>
+        <p id="story">Вы отправляетесь в путешествие...</p>
 
         <div id="scene">
-            <img id="background" src="assets/portal.jpg" alt="Фон">
-            <img id="character" src="assets/agent.png" alt="Персонаж">
+            <img id="background" src="https://source.unsplash.com/random/800x400?fantasy" alt="Фон">
         </div>
 
-        <div id="choices"></div>
-        <button id="start">Начать</button>
+        <div id="battle">
+            <p id="enemy-name"></p>
+            <p id="enemy-health"></p>
+            <button id="attack">⚔️ Атака</button>
+            <button id="defend">🛡️ Защита</button>
+            <button id="magic">✨ Магия</button>
+        </div>
+
+        <button id="next">➡️ Продолжить</button>
     </div>
 
     <script src="script.js"></script>
