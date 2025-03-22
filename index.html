@@ -8,17 +8,19 @@
 </head>
 <body>
     <div id="game">
-        <h1>Хроники Переплетений</h1>
-        <p>Выберите события, чтобы изменить судьбу времени.</p>
-        
-        <div id="timelines"></div>
+        <h1 id="title">Хроники Переплетений</h1>
+        <p id="story">Нажмите "Начать", чтобы войти в мир временных линий.</p>
 
-        <div id="controls">
-            <button id="rewind">Перемотать время</button>
-            <button id="stitch">Создать переплетение</button>
+        <div id="scene">
+            <img id="background" src="assets/bg1.jpg" alt="Фон">
+            <img id="character" src="assets/hero1.png" alt="Персонаж">
         </div>
 
-        <div id="story"></div>
+        <div id="choices">
+            <!-- Кнопки выбора будут добавляться динамически -->
+        </div>
+
+        <button id="start">Начать</button>
     </div>
 
     <script src="script.js"></script>
