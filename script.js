@@ -1,42 +1,35 @@
-// Игровые данные
+// Данные о путешествиях во времени
 const gameData = [
     {
-        text: "Вы оказались в разломе времени. Перед вами две дорожки...",
+        text: "Вы стоите перед порталом. Он ведет в неизвестность.",
         choices: [
-            { text: "Пойти налево", next: 1, bg: "assets/bg2.jpg", char: "assets/hero2.png" },
-            { text: "Пойти направо", next: 2, bg: "assets/bg3.jpg", char: "assets/hero3.png" }
+            { text: "Шагнуть внутрь", next: 1, bg: "assets/time_tunnel.jpg", char: "assets/agent.png" },
+            { text: "Остаться и изучить", next: 2, bg: "assets/lab.jpg", char: "assets/scientist.png" }
         ]
     },
     {
-        text: "Вы встретили странного старца. Он предлагает выбор.",
+        text: "Вы попали в доисторический мир! Гигантский динозавр замечает вас.",
         choices: [
-            { text: "Взять меч", next: 3, bg: "assets/bg4.jpg", char: "assets/hero4.png" },
-            { text: "Взять посох", next: 4, bg: "assets/bg5.jpg", char: "assets/hero5.png" }
+            { text: "Спрятаться в пещере", next: 3, bg: "assets/dino.jpg", char: "assets/agent_hide.png" },
+            { text: "Бежать на свет", next: 4, bg: "assets/jungle.jpg", char: "assets/agent_run.png" }
         ]
     },
     {
-        text: "Вы нашли древний артефакт, но стражи времени заметили вас!",
+        text: "Вы оказались в средневековье. Стражники вас заметили!",
         choices: [
-            { text: "Скрыться", next: 5, bg: "assets/bg6.jpg", char: "assets/hero6.png" },
-            { text: "Броситься в бой", next: 6, bg: "assets/bg7.jpg", char: "assets/hero7.png" }
+            { text: "Притвориться странником", next: 5, bg: "assets/castle.jpg", char: "assets/knight.png" },
+            { text: "Скрыться в толпе", next: 6, bg: "assets/market.jpg", char: "assets/merchant.png" }
         ]
     },
     {
-        text: "Вы оказались в альтернативной реальности, где правит магия.",
+        text: "Вы нашли странный артефакт! Он может вернуть вас обратно.",
         choices: [
-            { text: "Стать магом", next: 7, bg: "assets/bg8.jpg", char: "assets/hero8.png" },
-            { text: "Сражаться с магами", next: 8, bg: "assets/bg9.jpg", char: "assets/hero9.png" }
+            { text: "Активировать артефакт", next: 7, bg: "assets/futuristic.jpg", char: "assets/agent_future.png" },
+            { text: "Оставить его", next: 8, bg: "assets/dark_temple.jpg", char: "assets/mystic.png" }
         ]
     },
     {
-        text: "Финальная битва за судьбу временной линии!",
-        choices: [
-            { text: "Спасти мир", next: 9, bg: "assets/bg10.jpg", char: "assets/hero10.png" },
-            { text: "Уничтожить временные потоки", next: 10, bg: "assets/bg11.jpg", char: "assets/hero11.png" }
-        ]
-    },
-    {
-        text: "Вы победили! Временная линия спасена! 🎉",
+        text: "Поздравляем! Вы успешно выбрались из временного разлома!",
         choices: []
     }
 ];
@@ -56,7 +49,7 @@ startButton.addEventListener("click", () => {
     nextStep(0);
 });
 
-// Функция перехода на следующий шаг
+// Переход к следующему шагу
 function nextStep(stepIndex) {
     currentStep = stepIndex;
     const step = gameData[stepIndex];
@@ -64,18 +57,18 @@ function nextStep(stepIndex) {
     // Обновляем текст истории
     storyElement.textContent = step.text;
 
-    // Обновляем фон и персонажа с анимацией
+    // Меняем фон и персонажа
     backgroundElement.style.opacity = 0;
     setTimeout(() => {
-        backgroundElement.src = step.choices[0]?.bg || "assets/bg1.jpg";
-        characterElement.src = step.choices[0]?.char || "assets/hero1.png";
+        backgroundElement.src = step.choices[0]?.bg || "assets/default.jpg";
+        characterElement.src = step.choices[0]?.char || "assets/agent.png";
         backgroundElement.style.opacity = 1;
     }, 500);
 
     // Очищаем старые кнопки
     choicesContainer.innerHTML = "";
 
-    // Создаём новые кнопки выбора
+    // Создаем новые кнопки выбора
     step.choices.forEach(choice => {
         const btn = document.createElement("button");
         btn.classList.add("choice-btn");
