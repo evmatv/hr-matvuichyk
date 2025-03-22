@@ -1,83 +1,86 @@
-// Данные о временных линиях и событиях
-const timelines = [
+// Игровые данные
+const gameData = [
     {
-        name: "Линия А",
-        events: [
-            { id: 1, description: "Герой погибает в бою", affected: false },
-            { id: 2, description: "Город разрушен", affected: false }
-        ],
+        text: "Вы оказались в разломе времени. Перед вами две дорожки...",
+        choices: [
+            { text: "Пойти налево", next: 1, bg: "assets/bg2.jpg", char: "assets/hero2.png" },
+            { text: "Пойти направо", next: 2, bg: "assets/bg3.jpg", char: "assets/hero3.png" }
+        ]
     },
     {
-        name: "Линия Б",
-        events: [
-            { id: 3, description: "Ученый создает оружие", affected: false },
-            { id: 4, description: "Оружие уничтожает город", affected: false }
-        ],
+        text: "Вы встретили странного старца. Он предлагает выбор.",
+        choices: [
+            { text: "Взять меч", next: 3, bg: "assets/bg4.jpg", char: "assets/hero4.png" },
+            { text: "Взять посох", next: 4, bg: "assets/bg5.jpg", char: "assets/hero5.png" }
+        ]
     },
     {
-        name: "Линия В",
-        events: [
-            { id: 5, description: "Мирный договор подписан", affected: false },
-            { id: 6, description: "Тирания установлена", affected: false }
-        ],
+        text: "Вы нашли древний артефакт, но стражи времени заметили вас!",
+        choices: [
+            { text: "Скрыться", next: 5, bg: "assets/bg6.jpg", char: "assets/hero6.png" },
+            { text: "Броситься в бой", next: 6, bg: "assets/bg7.jpg", char: "assets/hero7.png" }
+        ]
     },
+    {
+        text: "Вы оказались в альтернативной реальности, где правит магия.",
+        choices: [
+            { text: "Стать магом", next: 7, bg: "assets/bg8.jpg", char: "assets/hero8.png" },
+            { text: "Сражаться с магами", next: 8, bg: "assets/bg9.jpg", char: "assets/hero9.png" }
+        ]
+    },
+    {
+        text: "Финальная битва за судьбу временной линии!",
+        choices: [
+            { text: "Спасти мир", next: 9, bg: "assets/bg10.jpg", char: "assets/hero10.png" },
+            { text: "Уничтожить временные потоки", next: 10, bg: "assets/bg11.jpg", char: "assets/hero11.png" }
+        ]
+    },
+    {
+        text: "Вы победили! Временная линия спасена! 🎉",
+        choices: []
+    }
 ];
 
 // DOM элементы
-const timelinesContainer = document.getElementById("timelines");
 const storyElement = document.getElementById("story");
-let selectedEvents = [];
+const choicesContainer = document.getElementById("choices");
+const backgroundElement = document.getElementById("background");
+const characterElement = document.getElementById("character");
+const startButton = document.getElementById("start");
 
-// Отображение временных линий
-function renderTimelines() {
-    timelinesContainer.innerHTML = "";
-    timelines.forEach((timeline, timelineIndex) => {
-        const timelineElement = document.createElement("div");
-        timelineElement.className = "timeline";
-        timelineElement.innerHTML = `<h3>${timeline.name}</h3>`;
-
-        timeline.events.forEach((event, eventIndex) => {
-            const eventElement = document.createElement("div");
-            eventElement.className = "event";
-            eventElement.textContent = event.description;
-            eventElement.style.backgroundColor = event.affected ? "#ff5555" : "#555";
-
-            eventElement.addEventListener("click", () => selectEvent(timelineIndex, eventIndex));
-            timelineElement.appendChild(eventElement);
-        });
-
-        timelinesContainer.appendChild(timelineElement);
-    });
-}
-
-// Выбор событий
-function selectEvent(timelineIndex, eventIndex) {
-    const event = timelines[timelineIndex].events[eventIndex];
-
-    if (!selectedEvents.includes(event)) {
-        selectedEvents.push(event);
-        storyElement.textContent = `Вы выбрали: ${event.description}`;
-    }
-}
-
-// Перемотка времени (сброс выбора)
-document.getElementById("rewind").addEventListener("click", () => {
-    selectedEvents = [];
-    storyElement.textContent = "Время перемотано! Попробуйте другой выбор.";
-    renderTimelines();
-});
-
-// Создание переплетения (изменение событий)
-document.getElementById("stitch").addEventListener("click", () => {
-    if (selectedEvents.length > 1) {
-        selectedEvents.forEach(event => event.affected = true);
-        storyElement.textContent = "Вы создали переплетение! Судьбы изменены.";
-        selectedEvents = [];
-        renderTimelines();
-    } else {
-        storyElement.textContent = "Выберите хотя бы два события для переплетения!";
-    }
-});
+let currentStep = 0;
 
 // Запуск игры
-renderTimelines();
+startButton.addEventListener("click", () => {
+    startButton.style.display = "none";
+    nextStep(0);
+});
+
+// Функция перехода на следующий шаг
+function nextStep(stepIndex) {
+    currentStep = stepIndex;
+    const step = gameData[stepIndex];
+
+    // Обновляем текст истории
+    storyElement.textContent = step.text;
+
+    // Обновляем фон и персонажа с анимацией
+    backgroundElement.style.opacity = 0;
+    setTimeout(() => {
+        backgroundElement.src = step.choices[0]?.bg || "assets/bg1.jpg";
+        characterElement.src = step.choices[0]?.char || "assets/hero1.png";
+        backgroundElement.style.opacity = 1;
+    }, 500);
+
+    // Очищаем старые кнопки
+    choicesContainer.innerHTML = "";
+
+    // Создаём новые кнопки выбора
+    step.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.classList.add("choice-btn");
+        btn.textContent = choice.text;
+        btn.addEventListener("click", () => nextStep(choice.next));
+        choicesContainer.appendChild(btn);
+    });
+}
