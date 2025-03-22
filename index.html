@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Монетный сборщик</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #87CEEB;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            border: 1px solid #000;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
@@ -13,6 +36,103 @@
         <button class="button" id="rightBtn">Вправо (D)</button>
         <button class="button" id="jumpBtn">Прыжок (Пробел)</button>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let player = {
+            x: 50,
+            y: 300,
+            width: 50,
+            height: 50,
+            color: 'blue',
+            gravity: 0.5,
+            jumpPower: -10,
+            velocityY: 0,
+            isJumping: false,
+            jumpCount: 0
+        };
+
+        let coins = [];
+        let score = 0;
+
+        function createCoin() {
+            const coin = {
+                x: Math.random() * (canvas.width - 30),
+                y: Math.random() * (canvas.height - 50),
+                width: 30,
+                height: 30,
+                collected: false
+            };
+            coins.push(coin);
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawCoins() {
+            coins.forEach(coin => {
+                if (!coin.collected) {
+                    ctx.fillStyle = 'gold';
+                    ctx.fillRect(coin.x, coin.y, coin.width, coin.height);
+                }
+            });
+        }
+
+        function update() {
+            player.velocityY += player.gravity;
+            player.y += player.velocityY;
+
+            if (player.y + player.height >= canvas.height) {
+                player.y = canvas.height - player.height;
+                player.isJumping = false;
+                player.jumpCount = 0; // Сброс счетчика прыжков
+            }
+
+            coins.forEach(coin => {
+                if (!coin.collected && player.x < coin.x + coin.width && player.x + player.width > coin.x && player.y < coin.y + coin.height && player.y + player.height > coin.y) {
+                    coin.collected = true;
+                    score++;
+                    // Эффект сбора монет
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillRect(coin.x, coin.y, coin.width, coin.height);
+                    setTimeout(() => {
+                        ctx.clearRect(coin.x, coin.y, coin.width, coin.height);
+                    }, 200);
+                }
+            });
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawCoins();
+            ctx.fillStyle = 'black';
+            ctx.fillText('Счет: ' + score, 10, 20);
+        }
+
+        function moveLeft() {
+            player.x -= 5;
+        }
+
+        function moveRight() {
+            player.x += 5;
+        }
+
+        function jump() {
+            if (player.jumpCount < 2) { // Позволяем два прыжка
+                player.velocityY = player.jumpPower;
+                player.isJumping = true;
+                player.jumpCount++; // Увеличиваем счетчик прыжков
+            }
+        }
+
+        document.getElementById('leftBtn').addEventListener('click', moveLeft);
+        document.getElementById('rightBtn').addEventListener('click', moveRight);
+        document.getElementById('jumpBtn').addEventListener('click', jump);
+
+        // Обработка нажатий клавиш
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyA') {
+                moveLeft();
+            }
