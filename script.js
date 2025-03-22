@@ -6,20 +6,16 @@ let player = {
     y: 300,
     width: 50,
     height: 50,
-    color: 'blue', // Цвет по умолчанию, если изображение не загружено
+    color: 'blue', // Цвет игрока
     gravity: 0.5,
     jumpPower: -10,
     velocityY: 0,
     isJumping: false,
-    jumpCount: 0,
-    image: new Image() // Изображение игрока
+    jumpCount: 0
 };
 
 let coins = [];
 let score = 0;
-
-// Загрузка изображения игрока
-player.image.src = 'timestitch/m.png'; // Замените на путь к вашему изображению
 
 function createCoin() {
     const coin = {
@@ -27,21 +23,21 @@ function createCoin() {
         y: Math.random() * (canvas.height - 50),
         width: 30,
         height: 30,
-        collected: false,
-        image: new Image() // Изображение монеты
+        collected: false
     };
-    coin.image.src = 'timestitch/pivo.png'; // Замените на путь к вашему изображению
     coins.push(coin);
 }
 
 function drawPlayer() {
-    ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
 function drawCoins() {
     coins.forEach(coin => {
         if (!coin.collected) {
-            ctx.drawImage(coin.image, coin.x, coin.y, coin.width, coin.height);
+            ctx.fillStyle = 'gold'; // Цвет монеты
+            ctx.fillRect(coin.x, coin.y, coin.width, coin.height);
         }
     });
 }
@@ -53,7 +49,7 @@ function update() {
     if (player.y + player.height >= canvas.height) {
         player.y = canvas.height - player.height;
         player.isJumping = false;
-        player.jumpCount = 0;
+        player.jumpCount = 0; // Сброс счетчика прыжков
     }
 
     coins.forEach(coin => {
@@ -85,4 +81,13 @@ function moveRight() {
 }
 
 function jump() {
-    if
+    if (player.jumpCount < 2) { // Позволяем два прыжка
+        player.velocityY = player.jumpPower;
+        player.isJumping = true;
+        player.jumpCount++; // Увеличиваем счетчик прыжков
+    }
+}
+
+document.getElementById('leftBtn').addEventListener('click', moveLeft);
+document.getElementById('rightBtn').addEventListener('click', moveRight);
+document.getElementById
