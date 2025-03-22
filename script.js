@@ -1,79 +1,94 @@
-// Данные о путешествиях во времени
-const gameData = [
-    {
-        text: "Вы стоите перед порталом. Он ведет в неизвестность.",
-        choices: [
-            { text: "Шагнуть внутрь", next: 1, bg: "assets/time_tunnel.jpg", char: "assets/agent.png" },
-            { text: "Остаться и изучить", next: 2, bg: "assets/lab.jpg", char: "assets/scientist.png" }
-        ]
-    },
-    {
-        text: "Вы попали в доисторический мир! Гигантский динозавр замечает вас.",
-        choices: [
-            { text: "Спрятаться в пещере", next: 3, bg: "assets/dino.jpg", char: "assets/agent_hide.png" },
-            { text: "Бежать на свет", next: 4, bg: "assets/jungle.jpg", char: "assets/agent_run.png" }
-        ]
-    },
-    {
-        text: "Вы оказались в средневековье. Стражники вас заметили!",
-        choices: [
-            { text: "Притвориться странником", next: 5, bg: "assets/castle.jpg", char: "assets/knight.png" },
-            { text: "Скрыться в толпе", next: 6, bg: "assets/market.jpg", char: "assets/merchant.png" }
-        ]
-    },
-    {
-        text: "Вы нашли странный артефакт! Он может вернуть вас обратно.",
-        choices: [
-            { text: "Активировать артефакт", next: 7, bg: "assets/futuristic.jpg", char: "assets/agent_future.png" },
-            { text: "Оставить его", next: 8, bg: "assets/dark_temple.jpg", char: "assets/mystic.png" }
-        ]
-    },
-    {
-        text: "Поздравляем! Вы успешно выбрались из временного разлома!",
-        choices: []
-    }
+// Глобальные переменные
+let player = {
+    health: 100,
+    attackPower: 15,
+    defense: 5,
+    magicPower: 20
+};
+
+let enemies = [
+    { name: "Древний Дух", health: 50, attack: 10 },
+    { name: "Теневой Маг", health: 60, attack: 15 },
+    { name: "Повелитель Пустоты", health: 80, attack: 20 }
 ];
 
-// DOM элементы
+let currentEnemy = null;
+let fighting = false;
+
+// DOM-элементы
 const storyElement = document.getElementById("story");
-const choicesContainer = document.getElementById("choices");
-const backgroundElement = document.getElementById("background");
-const characterElement = document.getElementById("character");
-const startButton = document.getElementById("start");
+const sceneElement = document.getElementById("scene");
+const enemyNameElement = document.getElementById("enemy-name");
+const enemyHealthElement = document.getElementById("enemy-health");
+const battleElement = document.getElementById("battle");
 
-let currentStep = 0;
+const attackButton = document.getElementById("attack");
+const defendButton = document.getElementById("defend");
+const magicButton = document.getElementById("magic");
+const nextButton = document.getElementById("next");
 
-// Запуск игры
-startButton.addEventListener("click", () => {
-    startButton.style.display = "none";
-    nextStep(0);
+// Генерация нового мира
+function generateNewWorld() {
+    sceneElement.innerHTML = `<img id="background" src="https://source.unsplash.com/random/800x400?magic" alt="Фон">`;
+    storyElement.textContent = "Вы открыли новый мир...";
+}
+
+// Начало битвы
+function startBattle() {
+    fighting = true;
+    currentEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+    enemyNameElement.textContent = currentEnemy.name;
+    enemyHealthElement.textContent = `❤️ ${currentEnemy.health}`;
+    battleElement.style.display = "block";
+}
+
+// Атака
+attackButton.addEventListener("click", () => {
+    if (fighting) {
+        currentEnemy.health -= player.attackPower;
+        player.health -= currentEnemy.attack;
+
+        enemyHealthElement.textContent = `❤️ ${currentEnemy.health}`;
+        storyElement.textContent = `Вы нанесли удар! Враг атакует в ответ!`;
+
+        if (currentEnemy.health <= 0) {
+            storyElement.textContent = `Вы победили ${currentEnemy.name}!`;
+            battleElement.style.display = "none";
+            fighting = false;
+        }
+    }
 });
 
-// Переход к следующему шагу
-function nextStep(stepIndex) {
-    currentStep = stepIndex;
-    const step = gameData[stepIndex];
+// Защита
+defendButton.addEventListener("click", () => {
+    if (fighting) {
+        player.health -= (currentEnemy.attack - player.defense);
+        storyElement.textContent = `Вы защитились! Враг ослабил удар.`;
+    }
+});
 
-    // Обновляем текст истории
-    storyElement.textContent = step.text;
+// Магия
+magicButton.addEventListener("click", () => {
+    if (fighting) {
+        currentEnemy.health -= player.magicPower;
+        storyElement.textContent = `Вы использовали магию!`;
 
-    // Меняем фон и персонажа
-    backgroundElement.style.opacity = 0;
-    setTimeout(() => {
-        backgroundElement.src = step.choices[0]?.bg || "assets/default.jpg";
-        characterElement.src = step.choices[0]?.char || "assets/agent.png";
-        backgroundElement.style.opacity = 1;
-    }, 500);
+        if (currentEnemy.health <= 0) {
+            storyElement.textContent = `Вы уничтожили ${currentEnemy.name} магией!`;
+            battleElement.style.display = "none";
+            fighting = false;
+        }
+    }
+});
 
-    // Очищаем старые кнопки
-    choicesContainer.innerHTML = "";
+// Переход в следующий мир
+nextButton.addEventListener("click", () => {
+    if (!fighting) {
+        generateNewWorld();
+        startBattle();
+    }
+});
 
-    // Создаем новые кнопки выбора
-    step.choices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.classList.add("choice-btn");
-        btn.textContent = choice.text;
-        btn.addEventListener("click", () => nextStep(choice.next));
-        choicesContainer.appendChild(btn);
-    });
-}
+// Запуск игры
+generateNewWorld();
+startBattle();
