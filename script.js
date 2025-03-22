@@ -19,7 +19,7 @@ let coins = [];
 let score = 0;
 
 // Загрузка изображения игрока
-player.image.src = 'path/to/your/player-image.png'; // Замените на путь к вашему изображению
+player.image.src = 'm.png'; // Замените на путь к вашему изображению
 
 function createCoin() {
     const coin = {
@@ -30,7 +30,7 @@ function createCoin() {
         collected: false,
         image: new Image() // Изображение монеты
     };
-    coin.image.src = 'path/to/your/coin-image.png'; // Замените на путь к вашему изображению
+    coin.image.src = 'pivo.png'; // Замените на путь к вашему изображению
     coins.push(coin);
 }
 
