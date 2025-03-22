@@ -1,40 +1,30 @@
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+let randomNumber;
+const guessButton = document.getElementById('guessButton');
+const guessInput = document.getElementById('guessInput');
+const message = document.getElementById('message');
+const winImage = document.getElementById('winImage');
+
+function startNewGame() {
+    randomNumber = Math.floor(Math.random() * 100) + 1; // Случайное число от 1 до 100
+    guessInput.value = ''; // Очистить поле ввода
+    message.textContent = ''; // Очистить сообщение
+    winImage.style.display = 'none'; // Скрыть изображение
 }
 
-h1 {
-    color: #333;
-}
+guessButton.addEventListener('click', () => {
+    const userGuess = Number(guessInput.value);
+    if (userGuess < 1 || userGuess > 100) {
+        message.textContent = 'Пожалуйста, введите число от 1 до 100.';
+    } else if (userGuess === randomNumber) {
+        message.textContent = 'Поздравляем! Вы угадали число!';
+        winImage.style.display = 'block'; // Показать изображение
+        startNewGame(); // Начать новую игру через 2 секунды
+    } else if (userGuess < randomNumber) {
+        message.textContent = 'Слишком низко! Попробуйте снова.';
+    } else {
+        message.textContent = 'Слишком высоко! Попробуйте снова.';
+    }
+});
 
-input {
-    padding: 10px;
-    font-size: 16px;
-    margin: 10px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.message {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #333;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-#winImage {
-    animation: fadeIn 1s ease-in-out;
-}
+// Начать новую игру при загрузке страницы
+startNewGame();
