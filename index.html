@@ -51,7 +51,7 @@
 
         function createCoin() {
             const coin = {
-                x: Math.random() * canvas.width,
+                x: Math.random() * (canvas.width - 30),
                 y: Math.random() * (canvas.height - 50),
                 width: 30,
                 height: 30,
@@ -113,4 +113,20 @@
         }
 
         function jump() {
-            if (player.jumpCount < 2) { ⬤
+            if (player.jumpCount < 2) { // Позволяем два прыжка
+                player.velocityY = player.jumpPower;
+                player.isJumping = true;
+                player.jumpCount++; // Увеличиваем счетчик прыжков
+            }
+        }
+
+        document.getElementById('leftBtn').addEventListener('click', moveLeft);
+        document.getElementById('rightBtn').addEventListener('click', moveRight);
+        document.getElementById('jumpBtn').addEventListener('click', jump);
+
+        // Обработка нажатий клавиш
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyA') {
+                moveLeft();
+            } else if (e.code === 'KeyD') {
+                moveRight();
