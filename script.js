@@ -16,12 +16,12 @@ guessButton.addEventListener('click', () => {
     if (userGuess < 1 || userGuess > 100) {
         message.textContent = 'Пожалуйста, введите число от 1 до 100.';
     } else if (userGuess === randomNumber) {
-        message.textContent = 'Поздравляем! Вы угадали число!';
+        message.textContent = 'Поздравляем! Вы угадали, вот ваш приз!';
         winImage.style.display = 'block'; // Показать изображение
     } else if (userGuess < randomNumber) {
-        message.textContent = 'Слишком низко! Попробуйте снова.';
+        message.textContent = 'Слишком низко! Постарайся еще, приз близко!.';
     } else {
-        message.textContent = 'Слишком высоко! Попробуйте снова.';
+        message.textContent = 'Слишком высоко! Ну ты Емеля даеш-то! Давай еще.';
     }
 });
 
