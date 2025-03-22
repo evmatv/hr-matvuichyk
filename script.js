@@ -7,9 +7,14 @@ let player = {
 };
 
 let enemies = [
-    { name: "Древний Дух", health: 50, attack: 10, img: "https://upload.wikimedia.org/wikipedia/commons/4/45/Demon_sprite.png" },
-    { name: "Теневой Маг", health: 60, attack: 15, img: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Mage_sprite.png" },
-    { name: "Повелитель Пустоты", health: 80, attack: 20, img: "https://upload.wikimedia.org/wikipedia/commons/9/97/Death_sprite.png" }
+    { name: "Древний Дух", health: 50, attack: 10, img: "https://opengameart.org/sites/default/files/demon.png" },
+    { name: "Теневой Маг", health: 60, attack: 15, img: "https://opengameart.org/sites/default/files/mage.png" }
+];
+
+let worlds = [
+    "https://raw.githubusercontent.com/mauricenino/pics/master/fantasy/forest.jpg",
+    "https://raw.githubusercontent.com/mauricenino/pics/master/fantasy/space.jpg",
+    "https://raw.githubusercontent.com/mauricenino/pics/master/fantasy/castle.jpg"
 ];
 
 let currentEnemy = null;
@@ -29,8 +34,7 @@ const nextButton = document.getElementById("next");
 
 // Генерация нового мира
 function generateNewWorld() {
-    let randomTheme = ["fantasy", "magic", "dark", "castle", "space"][Math.floor(Math.random() * 5)];
-    let newBg = `https://source.unsplash.com/1600x900/?${randomTheme}`;
+    let newBg = worlds[Math.floor(Math.random() * worlds.length)];
     document.getElementById("background").src = newBg;
     storyElement.textContent = "Вы открыли новый мир...";
 }
@@ -65,28 +69,6 @@ attackButton.addEventListener("click", () => {
 
         if (currentEnemy.health <= 0) {
             storyElement.textContent = `Вы победили ${currentEnemy.name}!`;
-            battleElement.style.display = "none";
-            fighting = false;
-        }
-    }
-});
-
-// Защита
-defendButton.addEventListener("click", () => {
-    if (fighting) {
-        player.health -= (currentEnemy.attack - player.defense);
-        storyElement.textContent = `Вы защитились! Враг ослабил удар.`;
-    }
-});
-
-// Магия
-magicButton.addEventListener("click", () => {
-    if (fighting) {
-        currentEnemy.health -= player.magicPower;
-        storyElement.textContent = `Вы использовали магию!`;
-
-        if (currentEnemy.health <= 0) {
-            storyElement.textContent = `Вы уничтожили ${currentEnemy.name} магией!`;
             battleElement.style.display = "none";
             fighting = false;
         }
